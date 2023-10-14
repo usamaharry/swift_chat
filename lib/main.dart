@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 //local
@@ -20,6 +21,15 @@ Future<void> main() async {
 
   runApp(const MainApp());
 }
+
+final theme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: const Color(0xFFF99417),
+    brightness: Brightness.dark,
+  ),
+  textTheme: GoogleFonts.latoTextTheme(),
+);
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
