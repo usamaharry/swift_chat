@@ -35,6 +35,7 @@ class AuthViewModel extends FormViewModel {
     final xFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
+      maxWidth: 150,
     );
     isLoadingImage = false;
     rebuildUi();

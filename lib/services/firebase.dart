@@ -38,17 +38,7 @@ class FirebaseService {
         'imageUrl': imageUrl,
       });
     }).then((error) async {
-      if (error != null) {
-        await _firestoreService.deleteUserData('users', _authService.user!.uid);
-        _firebaseStorage
-            .ref()
-            .child('user-images')
-            .child('${_authService.user!.uid}.jpg')
-            .delete();
-        await _authService.deleteUser();
-
-        return error;
-      }
+      if (error != null) return error;
       return null;
     });
   }

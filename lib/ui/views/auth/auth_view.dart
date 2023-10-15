@@ -176,6 +176,7 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   void initState() {
+    obsecure = widget.isObsecure;
     super.initState();
   }
 
