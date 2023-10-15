@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 //local
 import 'package:swift_chat/app/app.locator.dart';
 import 'package:swift_chat/app/app.router.dart';
-import 'package:swift_chat/services/auth.dart';
+import 'package:swift_chat/services/firebase.dart';
 import 'package:swift_chat/ui/views/auth/auth_view.form.dart';
 
 enum AuthState {
@@ -18,22 +17,27 @@ enum AuthState {
 }
 
 class AuthViewModel extends FormViewModel {
-  final _authService = locator<AuthService>();
   final _snackBarService = locator<SnackbarService>();
   final _navigationService = locator<NavigationService>();
+  final _firebaseService = locator<FirebaseService>();
 
   File? file;
-  var _authState = AuthState.register;
+  bool isLoadingImage = false;
+  var _authState = AuthState.login;
 
   bool get isLoginState => _authState == AuthState.login;
   bool get isRegisterState => _authState == AuthState.register;
   bool get isForgetPassowrdState => _authState == AuthState.forgetPassword;
 
   void selectImage() async {
+    isLoadingImage = true;
+    rebuildUi();
     final xFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
     );
+    isLoadingImage = false;
+    rebuildUi();
 
     if (xFile == null) return;
 
@@ -58,9 +62,11 @@ class AuthViewModel extends FormViewModel {
   }
 
   Future _register() async {
-    final error = await _authService.createUserWithEmailAndPassword(
+    final error = await _firebaseService.register(
+      userNameValue!,
       emailValue!,
       passwordValue!,
+      file!,
     );
 
     if (error != null) {
@@ -71,7 +77,7 @@ class AuthViewModel extends FormViewModel {
   }
 
   Future _login() async {
-    final error = await _authService.signInUserWithEmailAndPassword(
+    final error = await _firebaseService.login(
       emailValue!,
       passwordValue!,
     );
@@ -84,14 +90,14 @@ class AuthViewModel extends FormViewModel {
   }
 
   Future _resetPassword() async {
-    final error = await _authService.resetPassword(
+    final error = await _firebaseService.resetPassword(
       emailValue!,
     );
 
     if (error != null) {
       _showSnackBar(error);
     } else {
-      _showSnackBar('Reset linked has been sent to register email');
+      _showSnackBar('Password reset link sent to registered email');
     }
   }
 

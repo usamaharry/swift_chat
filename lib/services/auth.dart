@@ -4,7 +4,15 @@ class AuthService {
   User? user;
   final _auth = FirebaseAuth.instance;
 
-  Future<void> logout() async => await _auth.signOut();
+  Future<void> logout() async {
+    await _auth.signOut();
+    user = null;
+  }
+
+  Future<void> deleteUser() async {
+    await _auth.currentUser!.delete();
+    user = null;
+  }
 
   Future<String?> resetPassword(String email) async {
     return await authTryCatch(() async {

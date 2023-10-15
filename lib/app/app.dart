@@ -1,4 +1,6 @@
 import 'package:swift_chat/services/auth.dart';
+import 'package:swift_chat/services/firebase.dart';
+import 'package:swift_chat/services/firestore.dart';
 import 'package:swift_chat/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:swift_chat/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:swift_chat/ui/views/home/home_view.dart';
@@ -20,7 +22,9 @@ import 'package:swift_chat/ui/views/auth/auth_view.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: NavigationService),
-    Singleton(classType: AuthService)
+    Singleton(classType: AuthService),
+    Singleton(classType: FireStoreService),
+    Singleton(classType: FirebaseService),
     // @stacked-service
   ],
   bottomsheets: [

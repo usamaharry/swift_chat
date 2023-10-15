@@ -33,33 +33,43 @@ class AuthView extends StackedView<AuthViewModel> with $AuthView {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (viewModel.isRegisterState)
-                        GestureDetector(
-                          onTap: viewModel.selectImage,
-                          child: CircleAvatar(
-                            radius: 50,
-                            foregroundImage: viewModel.file != null
-                                ? FileImage(viewModel.file!)
-                                : null,
-                            child: const Icon(
-                              Icons.add,
-                              size: 35,
-                            ),
-                          ),
-                        ),
+                        viewModel.isLoadingImage
+                            ? const CircularProgressIndicator.adaptive()
+                            : GestureDetector(
+                                onTap: viewModel.selectImage,
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  foregroundImage: viewModel.file != null
+                                      ? FileImage(viewModel.file!)
+                                      : null,
+                                  child: const Icon(
+                                    Icons.add,
+                                    size: 35,
+                                  ),
+                                ),
+                              ),
                       const SizedBox(height: 20),
                       if (viewModel.isRegisterState) ...[
-                        formFieldBuilder(
-                            userNameController, 'User Name', context),
+                        MyTextField(
+                          label: 'User Name',
+                          controller: userNameController,
+                        ),
                         if (viewModel.hasUserNameValidationMessage)
                           errorTextBuilder(
                               viewModel.userNameValidationMessage!),
                       ],
-                      formFieldBuilder(emailController, 'Email', context),
+                      MyTextField(
+                        label: 'Email',
+                        controller: emailController,
+                      ),
                       if (viewModel.hasEmailValidationMessage)
                         errorTextBuilder(viewModel.emailValidationMessage!),
                       if (!viewModel.isForgetPassowrdState) ...[
-                        formFieldBuilder(
-                            passwordController, 'Password', context),
+                        MyTextField(
+                          label: 'Password',
+                          controller: passwordController,
+                          isObsecure: true,
+                        ),
                         if (viewModel.hasPasswordValidationMessage)
                           errorTextBuilder(viewModel.passwordValidationMessage!)
                       ],
@@ -126,29 +136,6 @@ class AuthView extends StackedView<AuthViewModel> with $AuthView {
     );
   }
 
-  Widget formFieldBuilder(
-    TextEditingController controller,
-    String label,
-    BuildContext context,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      height: 60,
-      child: TextFormField(
-        controller: controller,
-        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-        decoration: InputDecoration(
-          label: Text(label),
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 1,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   AuthViewModel viewModelBuilder(
     BuildContext context,
@@ -165,5 +152,62 @@ class AuthView extends StackedView<AuthViewModel> with $AuthView {
   void onDispose(AuthViewModel viewModel) {
     disposeForm();
     super.onDispose(viewModel);
+  }
+}
+
+class MyTextField extends StatefulWidget {
+  final TextEditingController controller;
+  final String label;
+  final bool isObsecure;
+
+  const MyTextField({
+    super.key,
+    required this.controller,
+    required this.label,
+    this.isObsecure = false,
+  });
+
+  @override
+  State<MyTextField> createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
+  bool obsecure = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      height: 60,
+      child: TextFormField(
+        controller: widget.controller,
+        obscureText: obsecure,
+        style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+        decoration: InputDecoration(
+          label: Text(widget.label),
+          suffixIcon: widget.isObsecure
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      obsecure = !obsecure;
+                    });
+                  },
+                  child:
+                      Icon(obsecure ? Icons.visibility_off : Icons.visibility),
+                )
+              : null,
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
