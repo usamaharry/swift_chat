@@ -38,7 +38,7 @@ class AuthView extends StackedView<AuthViewModel> with $AuthView {
                             : GestureDetector(
                                 onTap: viewModel.selectImage,
                                 child: CircleAvatar(
-                                  radius: 50,
+                                  radius: 100,
                                   foregroundImage: viewModel.file != null
                                       ? FileImage(viewModel.file!)
                                       : null,
