@@ -55,6 +55,10 @@ Future<String?> authTryCatch(Future Function() callback) async {
   try {
     await callback();
   } on FirebaseAuthException catch (error) {
+    if (error.code == 'INVALID_LOGIN_CREDENTIALS') {
+      return 'Wrong email or password';
+    }
+
     return error.message ?? 'There was problem while authenticating';
   } catch (error) {
     return 'There was an error. Please try again later';
