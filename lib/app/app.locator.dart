@@ -31,7 +31,10 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => NavigationService());
-  locator.registerSingleton(AuthService());
+  final authService = AuthService();
+  await authService.init();
+  locator.registerSingleton(authService);
+
   locator.registerSingleton(FireStoreService());
   locator.registerSingleton(FirebaseService());
 }

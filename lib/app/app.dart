@@ -22,7 +22,7 @@ import 'package:swift_chat/ui/views/auth/auth_view.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: NavigationService),
-    Singleton(classType: AuthService),
+    InitializableSingleton(classType: AuthService),
     Singleton(classType: FireStoreService),
     Singleton(classType: FirebaseService),
     // @stacked-service
