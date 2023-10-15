@@ -1,3 +1,4 @@
+import 'package:swift_chat/services/auth.dart';
 import 'package:swift_chat/ui/bottom_sheets/notice/notice_sheet.dart';
 import 'package:swift_chat/ui/dialogs/info_alert/info_alert_dialog.dart';
 import 'package:swift_chat/ui/views/home/home_view.dart';
@@ -17,7 +18,9 @@ import 'package:swift_chat/ui/views/auth/auth_view.dart';
   dependencies: [
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: DialogService),
+    LazySingleton(classType: SnackbarService),
     LazySingleton(classType: NavigationService),
+    Singleton(classType: AuthService)
     // @stacked-service
   ],
   bottomsheets: [
